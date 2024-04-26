@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS enotary_db;
+
+CREATE DATABASE enotary_db;
