@@ -187,6 +187,8 @@ git commit -m "Add migration for new table"
 git push  # If using a remote repository
 ```
 
+---
+
 ### JesseB notes:
 
 For future reference, you will run into this a lot where their `requirements.txt` file has much older versions of things, meant for an older version of Python like 3.7 or 3.8. You will find that newer versions of Python often aren't compatible. In that case, when you get a new project, you can use `sed` to take out all of the `==1.0.2` from the requirements file, like this:
@@ -194,3 +196,51 @@ For future reference, you will run into this a lot where their `requirements.txt
 `sed -i 's/==[0-9]*\.[0-9]*\.[0-9]*//g' requirements2.txt`
 
 So that is creating a new file called `requirements2.txt` and leaving the old one alone, and then you can run `pip install -r requirements2.txt`.  `Flask==1.0.2` becomes `Flask`.
+
+---
+
+### Flask-Migrate Notes
+
+#### 1. Create the `migrations` directory by running the command `flask db init`.
+#### 2. After running this command, you should see a message indicating that the `migrations` directory was created successfully. Then, you can run the `flask db migrate` command.  After running `flask db migrate`, remember to review the generated script in the `migrations/versions` directory.
+#### 3. If everything looks correct, you can apply the migration with `flask db upgrade`. This will update your database schema to match the current state of your models.
+#### 4. NB Below is sample console-output after running `flask db upgrade` with notes:
+
+- `INFO [alembic.runtime.migration] Running upgrade -> d064aef74b2f, empty message:` 
+  - This line indicates that Alembic is starting to apply the migration with the revision ID d064aef74b2f.
+
+- `CREATE TABLE user_types (...):` 
+  - This is the SQL command that was executed to create the user_types table.
+
+- `ALTER TABLE users ADD COLUMN user_type_id INTEGER:` 
+  - This is the SQL command that was executed to add the user_type_id column to the users table.
+
+- `ALTER TABLE users ADD UNIQUE (username):` 
+  - This is the SQL command that was executed to add a unique constraint to the username column of the users table.
+
+- `ALTER TABLE users ADD FOREIGN KEY(user_type_id) REFERENCES user_types (id):` 
+  - This is the SQL command that was executed to add a foreign key from users.user_type_id to user_types.id.
+
+- `INSERT INTO alembic_version (version_num) VALUES ('d064aef74b2f') RETURNING alembic_version.version_num:` 
+  - This is the SQL command that was executed to update the alembic_version table with the revision ID of the applied migration. This table is used by Alembic to keep track of which migrations have been applied.
+
+- `COMMIT:` 
+  - This is the SQL command that was executed to commit the changes to the database.  The fact that you're seeing COMMIT at the end, and no error messages, indicates that the migration was applied successfully. Your database schema should now match the current state of your SQLAlchemy models.
+
+#### 5. The alembic_version table explained:
+
+At the time of this note there are four tables listed in the `enotary_db` database (see below).  The table named `alembic_version` table is used by Alembic, the database migration tool used by Flask-Migrate.  This table keeps track of the current state of your database schema. It does this by storing the version number of the last migration script that was applied to your database.
+
+Each time you run a migration with `flask db upgrade`, Alembic updates the `alembic_version` table with the version number of the migration script. This allows Alembic to know which migration scripts have been applied and which haven't, so it can correctly apply new migration scripts in the future.  You generally don't need to interact with this table directly. Alembic will manage it for you.
+
+```
+enotary_db=# \dt
+            List of relations
+ Schema |      Name       | Type  | Owner 
+--------+-----------------+-------+-------
+ public | alembic_version | table | haus  
+ public | feedback        | table | haus  
+ public | user_types      | table | haus  
+ public | users           | table | haus  
+(4 rows)
+```

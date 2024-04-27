@@ -5,7 +5,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from werkzeug.exceptions import Unauthorized
 
-from models import connect_db, db, User, Feedback
+from models import connect_db, db, User, UserType, Feedback
 from forms import RegisterForm, LoginForm, FeedbackForm, DeleteForm
 
 app = Flask(__name__)
@@ -42,6 +42,8 @@ def register():
         return redirect(f"/users/{session['username']}")
 
     form = RegisterForm()
+    #cont'd from forms.py_refactor One_A: populate the choices for the SelectField in the register view function
+    form.user_type_id.choices = [(ut.id, ut.type) for ut in UserType.query.all()]
 
     if form.validate_on_submit():
         username = form.username.data
@@ -49,8 +51,9 @@ def register():
         first_name = form.first_name.data
         last_name = form.last_name.data
         email = form.email.data
+        user_type_id = form.user_type_id.data
 
-        user = User.register(username, password, first_name, last_name, email)
+        user = User.register(username, password, first_name, last_name, email, user_type_id)
 
         db.session.commit()
         session['username'] = user.username

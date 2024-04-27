@@ -33,6 +33,17 @@ class UserType(db.Model):
 
     users = db.relationship("User", backref="user_type")
 
+    @classmethod
+    def add_user_types(cls):
+        """Add user types to the database."""
+
+        types = ['Principal', 'Traditional Notary', 'Electronic Notary']
+        for type in types:
+            if not UserType.query.filter_by(type=type).first():
+                db.session.add(UserType(type=type))
+
+        db.session.commit()
+
 # This class defines the User model. Each attribute of the class represents a column in the "users" table in your database. The `feedback` attribute is a relationship that links users with their feedback. The `backref` argument allows you to access a user's feedback with `user.feedback`. The `cascade` argument ensures that when a user is deleted, all of their feedback is also deleted. This is a common practice to ensure that your database remains consistent.  
 class User(db.Model):
     """Site user."""
@@ -49,7 +60,7 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
-    user_type_id = db.Column(db.Integer, db.ForeignKey('user_types.id'))
+    user_type_id = db.Column(db.Integer, db.ForeignKey('user_types.id'), nullable=False)
 
     feedback = db.relationship("Feedback", backref="user", cascade="all,delete")
 
