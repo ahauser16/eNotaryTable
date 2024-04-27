@@ -6,25 +6,14 @@ A brief description of your project goes here.
 
 ## Installation
 
-Provide steps on how to install your project.
+1. To run this application first make sure your virtual environment is activated. If it's not, activate it with the command `source venv/bin/activate` 
 
-```
-bash
-git clone <your-repo-link>
-cd <your-repo-directory>
-npm install
-Usage
-Explain how to use your project.
+2. Then set the environment variable FLASK_APP to your application. For example, if your application is in a file named app.py, you would run `export FLASK_APP=app.py`.
 
-Contributing
-Details on how to contribute to your project.
+3. Run the application with the Flask command `flask run`.
 
-License
-Information about the license.
+4. This will start a development web server, and Flask will give you the address where your application is running (usually `http://127.0.0.1:5000/`).
 
-``` 
-
-You can replace the placeholders with your project-specific information.
 
 ## NOTES
 
@@ -197,3 +186,11 @@ git add migrations
 git commit -m "Add migration for new table"
 git push  # If using a remote repository
 ```
+
+### JesseB notes:
+
+For future reference, you will run into this a lot where their `requirements.txt` file has much older versions of things, meant for an older version of Python like 3.7 or 3.8. You will find that newer versions of Python often aren't compatible. In that case, when you get a new project, you can use `sed` to take out all of the `==1.0.2` from the requirements file, like this:
+
+`sed -i 's/==[0-9]*\.[0-9]*\.[0-9]*//g' requirements2.txt`
+
+So that is creating a new file called `requirements2.txt` and leaving the old one alone, and then you can run `pip install -r requirements2.txt`.  `Flask==1.0.2` becomes `Flask`.
