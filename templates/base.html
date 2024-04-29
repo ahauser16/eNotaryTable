@@ -1,38 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>
-    Flask Feedback &ndash; {% block title %}{% endblock %}
-  </title>
-  <link rel="stylesheet"
-        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
-  <!-- <link rel="stylesheet" href="/static/style.css"> -->
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">Flask Feedback</a>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      {% if 'username' in session %}
-      <a class="nav-link" href="/logout">Logout</a>
-      {% else %}
-      <a class="nav-link" href="/login">Login</a>
-      {% endif %}
-    </li>
-  </ul>
-</nav>
-
-<div class="container mt-5">
-  {% for msg in get_flashed_messages() %}
-  <div class="alert alert-info">{{ msg }}</div>
-  {% endfor %}
-
-  {% block content %}
-  <!-- put the content here -->
-  {% endblock %}
-</div>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eNotaryNYServices &ndash; {% block title %}{% endblock %}</title>
+    <!-- <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap/dist/css/bootstrap.css"> -->
+    <link rel="stylesheet" href="../static/css/styles.css" />
+    <link rel="stylesheet" href="../static/css/header.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container row">
+        <button class="nav-toggle" aria-label="open navigation">
+          <span class="hamburger"></span>
+        </button>
+        <a class="logo" href="#">
+          <img src="../assets/images/hound_icon.png" alt="hound dog icon" />
+        </a>
+        <nav class="nav">
+          <!-- <a class="navbar-brand" href="/">Flask Feedback</a> -->
+          <ul class="nav__list nav__list--primary">
+            <li class="nav__item">
+              <a href="#" class="nav__link">Home</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link">About</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link">Contact</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link">Resource Center</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_principal">My E-Signatures</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_principal">My Notaries</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_all_notaries">My Commission</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_all_notaries">My Logbook</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_e-notary">My Clients</a>
+            </li>
+            <li class="nav__item">
+              <a href="#" class="nav__link_e-notary">My E-Stamp</a>
+            </li>
+          </ul>
+          <ul class="nav__list nav__list--secondary">
+            <li class="nav__item">
+              {% if 'username' in session %}
+              <a class="nav__link" href="/logout">Logout</a>
+              {% else %}
+              <a class="nav__link" href="/login">Login</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="container row">
+      {% for msg in get_flashed_messages() %}
+      <div class="container row">{{ msg }}</div>
+      {% endfor %} {% block content %}
+      <!-- put the content here -->
+      {% endblock %}
+    </div>
+    <script src="../static/js/nav.js"></script>
+  </body>
 </html>
